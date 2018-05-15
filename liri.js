@@ -47,21 +47,16 @@ function mySpotify(content = "'The Sign' 'Ace of Base'") {
     writeToFile("URL: " + song.preview_url);
     writeToFile("Album: " + song.album.name);
     writeToFile("------");
-    console.log(
-      chalk.bgHex("#1db954")(
-        chalk.hex("#191414")("Artist: " + song.artists[0].name)
-      )
-    );
-    console.log(
-      chalk.bgHex("#1db954")(chalk.hex("#191414")("Song: " + song.name))
-    );
-    console.log(
-      chalk.bgHex("#1db954")(chalk.hex("#191414")("URL: " + song.preview_url))
-    );
-    console.log(
-      chalk.bgHex("#1db954")(chalk.hex("#191414")("Album: " + song.album.name))
-    );
+
+    spotifyLog("Artist: " + song.artists[0].name);
+    spotifyLog("Song: " + song.name);
+    spotifyLog("URL: " + song.preview_url);
+    spotifyLog("Album: " + song.album.name);
   });
+}
+
+function spotifyLog(myString) {
+  console.log(chalk.bgHex("#1db954")(chalk.hex("#191414")(myString)));
 }
 
 function movies(content = "Mr.Nobody") {
@@ -69,7 +64,7 @@ function movies(content = "Mr.Nobody") {
     "http://www.omdbapi.com/?t=" + content + "&y=&plot=short&apikey=trilogy";
   request(queryUrl, function(error, response, body) {
     var movie = JSON.parse(body);
-    writeToFile("------");
+    var console = writeToFile("------");
     writeToFile("Title: " + movie.Title);
     writeToFile("Release Year: " + movie.Year);
     writeToFile("IMDB Rating: " + movie.imdbRating);
@@ -79,39 +74,20 @@ function movies(content = "Mr.Nobody") {
     writeToFile("Plot: " + movie.Plot);
     writeToFile("Actors: " + movie.Actors);
     writeToFile("------");
-    console.log(
-      chalk.bgHex("#deb522")(chalk.hex("#0c0b00")("Title: " + movie.Title))
-    );
-    console.log(
-      chalk.bgHex("#deb522")(
-        chalk.hex("#0c0b00")("Release Year: " + movie.Year)
-      )
-    );
-    console.log(
-      chalk.bgHex("#deb522")(
-        chalk.hex("#0c0b00")("IMDB Rating: " + movie.imdbRating)
-      )
-    );
-    console.log(
-      chalk.bgHex("#deb522")(
-        chalk.hex("#0c0b00")("Rotten Tomatoes: " + movie.Ratings[1].Value)
-      )
-    );
-    console.log(
-      chalk.bgHex("#deb522")(chalk.hex("#0c0b00")("Country: " + movie.Country))
-    );
-    console.log(
-      chalk.bgHex("#deb522")(
-        chalk.hex("#0c0b00")("Language: " + movie.Language)
-      )
-    );
-    console.log(
-      chalk.bgHex("#deb522")(chalk.hex("#0c0b00")("Plot: " + movie.Plot))
-    );
-    console.log(
-      chalk.bgHex("#deb522")(chalk.hex("#0c0b00")("Actors: " + movie.Actors))
-    );
+
+    movieLog("Title: " + movie.Title);
+    movieLog("Release Year: " + movie.Year);
+    movieLog("IMDB Rating: " + movie.imdbRating);
+    movieLog("Rotten Tomatoes: " + movie.Ratings[1].Value);
+    movieLog("Country: " + movie.Country);
+    movieLog("Language: " + movie.Language);
+    movieLog("Plot: " + movie.Plot);
+    movieLog("Actors: " + movie.Actors);
   });
+}
+
+function movieLog(myString) {
+  console.log(chalk.bgHex("#deb522")(chalk.hex("#0c0b00")(myString)));
 }
 
 function random() {
