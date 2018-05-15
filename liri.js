@@ -4,11 +4,6 @@ var Twitter = require("twitter");
 const keys = require("./keys");
 var spotify = new Spotify(keys.spotify);
 var request = require("request");
-var mediaName = process.argv[3];
-var queryUrl =
-  "http://www.omdbapi.com/?t=" + mediaName + "&y=&plot=short&apikey=trilogy";
-var mrQuery =
-  "http://www.omdbapi.com/?t=Mr.Nobody&y=&plot=short&apikey=trilogy";
 
 function Tweets() {
   var client = new Twitter(keys.twitter);
@@ -29,8 +24,8 @@ function Tweets() {
   });
 }
 
-function mySpotify() {
-  spotify.search({ type: "track", query: mediaName }, function(err, data) {
+function mySpotify(content = "'The Sign' 'Ace of Base'") {
+  spotify.search({ type: "track", query: content }, function(err, data) {
     if (err) {
       return console.log("Error occurred: " + err);
     }
@@ -42,30 +37,19 @@ function mySpotify() {
   });
 }
 
-function movies() {
-  if (process.argv[3] === undefined) {
-    request(mrQuery, function(error, response, body) {
-      console.log("Title: " + JSON.parse(body).Title);
-      console.log("Release Year: " + JSON.parse(body).Year);
-      console.log("IMDB Rating: " + JSON.parse(body).imdbRating);
-      console.log("Rotten Tomatoes: " + JSON.parse(body).Ratings[1].Value);
-      console.log("Country: " + JSON.parse(body).Country);
-      console.log("Language: " + JSON.parse(body).Language);
-      console.log("Plot: " + JSON.parse(body).Plot);
-      console.log("Actors: " + JSON.parse(body).Actors);
-    });
-  } else {
-    request(queryUrl, function(error, response, body) {
-      console.log("Title: " + JSON.parse(body).Title);
-      console.log("Release Year: " + JSON.parse(body).Year);
-      console.log("IMDB Rating: " + JSON.parse(body).imdbRating);
-      console.log("Rotten Tomatoes: " + JSON.parse(body).Ratings[1].Value);
-      console.log("Country: " + JSON.parse(body).Country);
-      console.log("Language: " + JSON.parse(body).Language);
-      console.log("Plot: " + JSON.parse(body).Plot);
-      console.log("Actors: " + JSON.parse(body).Actors);
-    });
-  }
+function movies(content = "Mr.Nobody") {
+  var queryUrl =
+    "http://www.omdbapi.com/?t=" + content + "&y=&plot=short&apikey=trilogy";
+  request(queryUrl, function(error, response, body) {
+    console.log("Title: " + JSON.parse(body).Title);
+    console.log("Release Year: " + JSON.parse(body).Year);
+    console.log("IMDB Rating: " + JSON.parse(body).imdbRating);
+    console.log("Rotten Tomatoes: " + JSON.parse(body).Ratings[1].Value);
+    console.log("Country: " + JSON.parse(body).Country);
+    console.log("Language: " + JSON.parse(body).Language);
+    console.log("Plot: " + JSON.parse(body).Plot);
+    console.log("Actors: " + JSON.parse(body).Actors);
+  });
 }
 
 function random() {
@@ -79,22 +63,28 @@ function random() {
 
     result = data.split(",");
 
-    for (var i = 0; i < result.length; i++) {
-      console.log(result[i]);
-    }
+    callCommands(result[0], result[1]);
+    console.log(result);
   });
 }
 
-function callCommands() {
-  if (process.argv[2] === "my-tweets") {
-    Tweets();
-  } else if (process.argv[2] === "spotify-this-song") {
-    mySpotify();
-  } else if (process.argv[2] === "movie-this") {
-    movies();
-  } else if (process.argv[2] === "do-what-it-says") {
-    random();
+function callCommands(command, content) {
+  switch (command) {
+    case "my-tweets":
+      Tweets();
+      break;
+    case "spotify-this-song":
+      mySpotify(content);
+      break;
+    case "movie-this":
+      movies(content);
+      break;
+    case "do-what-it-says":
+      random();
+      break;
+    default:
+      console.log("Something fun.");
   }
 }
 
-callCommands();
+callCommands(process.argv[2], process.argv[3]);
