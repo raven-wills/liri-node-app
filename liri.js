@@ -127,9 +127,35 @@ function callCommands(command, content) {
     case "do-what-it-says":
       random();
       break;
+    case "rainbow":
+      rainbowPad("");
+      content.split(" ").forEach(phrase => rainbowPad(phrase));
+      rainbowPad("");
+      break;
     default:
-      console.log("Something fun.");
+      rainbowPad(
+        `        ^^^^^^^^^^^^^^^^^^^^^^^^
+      < I am a majestic unicorn! >
+        ------------------------
+
+              *\\    
+                \\   
+              /.((( 
+              (,/"(((__,--.
+                  \  ) _( /{ 
+                  !|| " :||      
+                  !||   :|| 
+                  '''   '''   
+      ------------------------------`
+      );
   }
 }
+const rainbowPad = myString => {
+  console.log(
+    chalkRainbow(
+      myString.padStart(50 + myString.length / 2, "_").padEnd(100, "_")
+    )
+  );
+};
 
 callCommands(process.argv[2], process.argv[3]);
