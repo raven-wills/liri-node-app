@@ -4,6 +4,8 @@ var Twitter = require("twitter");
 const keys = require("./keys");
 var spotify = new Spotify(keys.spotify);
 var request = require("request");
+const chalk = require("chalk");
+var chalkRainbow = require("chalk-rainbow");
 
 function Tweets() {
   var client = new Twitter(keys.twitter);
@@ -16,9 +18,13 @@ function Tweets() {
   ) {
     if (!error) {
       for (var i = 0; i < tweets.length; i++) {
-        console.log(tweets[i].text + "-" + tweets[i].created_at);
+        console.log(
+          chalk.bgRgb(0, 132, 180)(
+            chalk.white(tweets[i].text + "-" + tweets[i].created_at)
+          )
+        );
 
-        console.log("------");
+        console.log(chalkRainbow("------"));
       }
     }
   });
@@ -30,10 +36,22 @@ function mySpotify(content = "'The Sign' 'Ace of Base'") {
       return console.log("Error occurred: " + err);
     }
 
-    console.log(data.tracks.items[0].artists[0].name);
-    console.log(data.tracks.items[0].name);
-    console.log(data.tracks.items[0].preview_url);
-    console.log(data.tracks.items[0].album.name);
+    const song = data.tracks.items[0];
+
+    console.log(
+      chalk.bgHex("#1db954")(
+        chalk.hex("#191414")("Artist: " + song.artists[0].name)
+      )
+    );
+    console.log(
+      chalk.bgHex("#1db954")(chalk.hex("#191414")("Song: " + song.name))
+    );
+    console.log(
+      chalk.bgHex("#1db954")(chalk.hex("#191414")("URL: " + song.preview_url))
+    );
+    console.log(
+      chalk.bgHex("#1db954")(chalk.hex("#191414")("Album: " + song.album.name))
+    );
   });
 }
 
@@ -41,14 +59,39 @@ function movies(content = "Mr.Nobody") {
   var queryUrl =
     "http://www.omdbapi.com/?t=" + content + "&y=&plot=short&apikey=trilogy";
   request(queryUrl, function(error, response, body) {
-    console.log("Title: " + JSON.parse(body).Title);
-    console.log("Release Year: " + JSON.parse(body).Year);
-    console.log("IMDB Rating: " + JSON.parse(body).imdbRating);
-    console.log("Rotten Tomatoes: " + JSON.parse(body).Ratings[1].Value);
-    console.log("Country: " + JSON.parse(body).Country);
-    console.log("Language: " + JSON.parse(body).Language);
-    console.log("Plot: " + JSON.parse(body).Plot);
-    console.log("Actors: " + JSON.parse(body).Actors);
+    var movie = JSON.parse(body);
+    console.log(
+      chalk.bgHex("#deb522")(chalk.hex("#0c0b00")("Title: " + movie.Title))
+    );
+    console.log(
+      chalk.bgHex("#deb522")(
+        chalk.hex("#0c0b00")("Release Year: " + movie.Year)
+      )
+    );
+    console.log(
+      chalk.bgHex("#deb522")(
+        chalk.hex("#0c0b00")("IMDB Rating: " + movie.imdbRating)
+      )
+    );
+    console.log(
+      chalk.bgHex("#deb522")(
+        chalk.hex("#0c0b00")("Rotten Tomatoes: " + movie.Ratings[1].Value)
+      )
+    );
+    console.log(
+      chalk.bgHex("#deb522")(chalk.hex("#0c0b00")("Country: " + movie.Country))
+    );
+    console.log(
+      chalk.bgHex("#deb522")(
+        chalk.hex("#0c0b00")("Language: " + movie.Language)
+      )
+    );
+    console.log(
+      chalk.bgHex("#deb522")(chalk.hex("#0c0b00")("Plot: " + movie.Plot))
+    );
+    console.log(
+      chalk.bgHex("#deb522")(chalk.hex("#0c0b00")("Actors: " + movie.Actors))
+    );
   });
 }
 
@@ -62,9 +105,11 @@ function random() {
     }
 
     result = data.split(",");
+    var executeString = "Now executing " + result[0];
+    executeString += result[1] ? " with content of: " + result[1] : "";
 
+    console.log(chalkRainbow(executeString));
     callCommands(result[0], result[1]);
-    console.log(result);
   });
 }
 
