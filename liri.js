@@ -6,6 +6,7 @@ var spotify = new Spotify(keys.spotify);
 var request = require("request");
 const chalk = require("chalk");
 var chalkRainbow = require("chalk-rainbow");
+var fs = require("fs");
 
 function Tweets() {
   var client = new Twitter(keys.twitter);
@@ -18,6 +19,9 @@ function Tweets() {
   ) {
     if (!error) {
       for (var i = 0; i < tweets.length; i++) {
+        writeToFile("------");
+        writeToFile(tweets[i].text + "-" + tweets[i].created_at);
+        writeToFile("------");
         console.log(
           chalk.bgRgb(0, 132, 180)(
             chalk.white(tweets[i].text + "-" + tweets[i].created_at)
@@ -37,7 +41,12 @@ function mySpotify(content = "'The Sign' 'Ace of Base'") {
     }
 
     const song = data.tracks.items[0];
-
+    writeToFile("------");
+    writeToFile("Artist: " + song.artists[0].name);
+    writeToFile("Song: " + song.name);
+    writeToFile("URL: " + song.preview_url);
+    writeToFile("Album: " + song.album.name);
+    writeToFile("------");
     console.log(
       chalk.bgHex("#1db954")(
         chalk.hex("#191414")("Artist: " + song.artists[0].name)
@@ -60,6 +69,16 @@ function movies(content = "Mr.Nobody") {
     "http://www.omdbapi.com/?t=" + content + "&y=&plot=short&apikey=trilogy";
   request(queryUrl, function(error, response, body) {
     var movie = JSON.parse(body);
+    writeToFile("------");
+    writeToFile("Title: " + movie.Title);
+    writeToFile("Release Year: " + movie.Year);
+    writeToFile("IMDB Rating: " + movie.imdbRating);
+    writeToFile("Rotten Tomatoes: " + movie.Ratings[1].Value);
+    writeToFile("Country: " + movie.Country);
+    writeToFile("Language: " + movie.Language);
+    writeToFile("Plot: " + movie.Plot);
+    writeToFile("Actors: " + movie.Actors);
+    writeToFile("------");
     console.log(
       chalk.bgHex("#deb522")(chalk.hex("#0c0b00")("Title: " + movie.Title))
     );
@@ -96,7 +115,6 @@ function movies(content = "Mr.Nobody") {
 }
 
 function random() {
-  var fs = require("fs");
   var result = [];
 
   fs.readFile("random.txt", "utf8", function(err, data) {
@@ -107,7 +125,6 @@ function random() {
     result = data.split(",");
     var executeString = "Now executing " + result[0];
     executeString += result[1] ? " with content of: " + result[1] : "";
-
     console.log(chalkRainbow(executeString));
     callCommands(result[0], result[1]);
   });
@@ -150,6 +167,16 @@ function callCommands(command, content) {
       );
   }
 }
+
+var writeToFile = function(input) {
+  fs.appendFile("log.txt", "\n" + input, function(err) {
+    // If an error was experienced we say it.
+    if (err) {
+      console.log(err);
+    }
+  });
+};
+
 const rainbowPad = myString => {
   console.log(
     chalkRainbow(
